@@ -85,7 +85,7 @@ function Nav({user,out}){
  const[o,setO]=useState(false)
  return <nav><div className="wrap"><div className="logo" onClick={()=>location.hash='#/'}><i>⚖</i><div><b>PuneCourtTranslator</b><small>LEGAL LANGUAGE AI</small></div></div>
  <div className={'links'+(o?' open':'')} onClick={()=>setO(false)}>{[['features','Features'],['pricing','Pricing'],['about','About'],['contact','Contact']].map(([k,l])=><a key={k} href={k==='about'?'#/about':undefined} onClick={e=>{if(k!=='about'){e.preventDefault();jump(k)}}}>{l}</a>)}</div>
- <div className="nr">{user?<><a className="btn gh sm" href="#/app">Dashboard</a><a className="btn sm" href="#/app">⚡ Translate</a><div className="av" title={user.name}>{user.name.replace(/^Adv\.\s*/,'')[0]}</div><button className="btn gh sm" onClick={out}>Log out</button></>:<><a className="btn gh sm" href="#/login">Log in</a><a className="btn sm" href="#/login?signup">Start Free</a></>}<button className="bg" onClick={()=>setO(!o)}>☰</button></div></div></nav>
+ <div className="nr">{user?<><a className="btn gh sm" href="#/app">Dashboard</a><a className="btn sm" href="#/app">⚡ Translate</a><a className="av" href="#/profile" title="Open profile">{user.name.replace(/^Adv\.\s*/,'')[0]}</a><button className="btn gh sm" onClick={out}>Log out</button></>:<><a className="btn gh sm" href="#/login">Log in</a><a className="btn sm" href="#/login?signup">Start Free</a></>}<button className="bg" onClick={()=>setO(!o)}>☰</button></div></div></nav>
 }
 
 function AboutPage(){
@@ -170,6 +170,8 @@ function Login({users,setUsers,ok}){
 
 function ProfilePanel({user,upd,onTranslate}){
  const minutes=user.plan==='Business'?'Unlimited':`${user.used.toFixed(1)} min`
+ const limit=D.limits[user.plan],usage=limit==null?100:Math.min(100,(user.used/limit)*100)
+ const initials=user.name.split(/\s+/).filter(Boolean).map(x=>x[0]).slice(0,2).join('').toUpperCase()
  const features=[
   ['🎙','Translate Speech','Turn hearings, depositions and voice notes into accurate translated text with timestamps.','speech','MP3, WAV, M4A'],
   ['📄','Translate Document','Translate judgments, affidavits, FIRs and notices while keeping your records organized.','document','PDF, DOCX, TXT'],
@@ -177,17 +179,22 @@ function ProfilePanel({user,upd,onTranslate}){
  ]
  return <div className="profile-screen">
   <div className="profile-head">
-   <div className="profile-identity"><div className="profile-avatar">{user.name.replace(/^Adv\.\s*/,'')[0]}</div><div><span className="eyebrow">USER PROFILE</span><h2>{user.name}</h2><p>{user.email}</p></div></div>
-   <div className="profile-plan"><span>Current plan</span><b>{user.plan}</b><small>{minutes} used</small></div>
+  <div className="profile-identity"><div className="profile-avatar">{initials}</div><div><span className="eyebrow">USER PROFILE</span><h2>{user.name}</h2><p>{user.email}</p><div className="profile-status"><i/> Account active · Member since 2026</div></div></div>
+  <div className="profile-plan"><span>Current plan</span><b>{user.plan}</b><small>{user.plan==='Free'?'Upgrade for more capacity':'Plan active'}</small></div>
   </div>
   <div className="profile-stats">
    <div><b>{user.history.length}</b><span>Saved translations</span></div>
    <div><b>{minutes}</b><span>Minutes used</span></div>
    <div><b>{user.plan==='Free'?'5':'50+'}</b><span>Languages available</span></div>
   </div>
-  <div className="profile-section-title"><div><span className="eyebrow">TRANSLATION TOOLS</span><h3>What would you like to translate?</h3></div><span className="profile-section-note">Choose a format to get started</span></div>
-  <div className="profile-features">{features.map(([icon,title,desc,type,formats])=><button className="profile-feature" key={type} onClick={()=>onTranslate(type)}><div className={'profile-feature-icon '+type}>{icon}</div><div className="profile-feature-copy"><h4>{title}</h4><p>{desc}</p><small>{formats}</small></div><span className="profile-arrow">→</span></button>)}</div>
-  <div className="profile-details card"><div><span className="eyebrow">ACCOUNT DETAILS</span><h3>Personal information</h3></div><div className="profile-fields"><label className="fld">Name<input value={user.name} onChange={e=>upd({name:e.target.value})}/></label><label className="fld">Email<input value={user.email} disabled/></label></div><p className="profile-security">🔒 Your account and translations are stored securely.</p></div>
+ <div className="profile-columns">
+  <div className="profile-usage card"><div className="profile-card-head"><div><span className="eyebrow">PLAN USAGE</span><h3>Translation allowance</h3></div><span className="profile-card-icon">◒</span></div><div className="usage-line"><b>{minutes}</b><span>{limit==null?'Unlimited access':`of ${limit} minutes`}</span></div><div className="meter"><i style={{width:`${usage}%`}}/></div><p>{limit==null?'Your Business plan has unlimited translation minutes.':`${Math.max(0,limit-user.used).toFixed(1)} minutes remaining this period.`}</p><a className="btn sm" href="#/app">Manage plan →</a></div>
+  <div className="profile-security-card card"><div className="profile-card-head"><div><span className="eyebrow">SECURITY</span><h3>Your account is protected</h3></div><span className="profile-card-icon">⌾</span></div><div className="security-row"><span>🔒</span><div><b>Private workspace</b><small>Your files are visible only to you.</small></div><strong>Active</strong></div><div className="security-row"><span>✓</span><div><b>Secure processing</b><small>Encrypted in transit and at rest.</small></div><strong>On</strong></div></div>
+ </div>
+ <div className="profile-section-title"><div><span className="eyebrow">TRANSLATION TOOLS</span><h3>What would you like to translate?</h3></div><span className="profile-section-note">Choose a format to get started</span></div>
+ <div className="profile-features">{features.map(([icon,title,desc,type,formats])=><button className="profile-feature" key={type} onClick={()=>onTranslate(type)}><div className={'profile-feature-icon '+type}>{icon}</div><div className="profile-feature-copy"><h4>{title}</h4><p>{desc}</p><small>{formats}</small></div><span className="profile-arrow">→</span></button>)}</div>
+ <div className="profile-history card"><div className="profile-card-head"><div><span className="eyebrow">RECENT ACTIVITY</span><h3>Your translation history</h3></div><a className="profile-text-link" href="#/app">Open workspace →</a></div>{user.history.length?<div className="profile-history-list">{user.history.slice(0,5).map(h=><div className="profile-history-item" key={h.id}><span className="profile-history-kind">✦</span><div><b>{h.name}</b><small>{LG[h.from]} → {LG[h.to]} · {new Date(h.at).toLocaleDateString()}</small></div><button className="btn gh sm" onClick={()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([h.out],{type:'text/plain'}));a.download='translation.txt';a.click()}}>Download</button></div>)}</div>:<div className="profile-empty"><span>◌</span><p>No translations yet. Your completed work will appear here.</p><a className="profile-text-link" href="#/app">Start your first translation →</a></div>}</div>
+ <div className="profile-details card"><div><span className="eyebrow">ACCOUNT DETAILS</span><h3>Personal information</h3></div><div className="profile-fields"><label className="fld">Name<input value={user.name} onChange={e=>upd({name:e.target.value})}/></label><label className="fld">Email<input value={user.email} disabled/></label></div><p className="profile-security">🔒 Your account and translations are stored securely.</p></div>
  </div>
 }
 
@@ -234,6 +241,7 @@ export default function App(){
  let page
  if(h.startsWith('#/login'))page=<Login users={users} setUsers={setUsers} ok={ok}/>
  else if(h.startsWith('#/app'))page=user?<Workspace user={user} upd={upd}/>:<Login users={users} setUsers={setUsers} ok={ok}/>
+ else if(h.startsWith('#/profile'))page=user?<div className="wrap app"><ProfilePanel user={user} upd={upd} onTranslate={()=>{location.hash='#/app'}}/></div>:<Login users={users} setUsers={setUsers} ok={ok}/>
  else if(h.startsWith('#/about'))page=<AboutPage/>
  else page=<Landing user={user}/>
  return <><CreativeBackdrop/><Nav user={user} out={out}/>{page}</>
