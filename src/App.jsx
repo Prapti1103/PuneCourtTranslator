@@ -85,8 +85,11 @@ function Nav({user,out}){
  const[o,setO]=useState(false)
  return <nav><div className="wrap"><div className="logo" onClick={()=>location.hash='#/'}><i>⚖</i><div><b>PuneCourtTranslator</b><small>LEGAL LANGUAGE AI</small></div></div>
  <div className={'links'+(o?' open':'')} onClick={()=>setO(false)}>{[['features','Features'],['pricing','Pricing'],['about','About'],['contact','Contact']].map(([k,l])=><a key={k} href={k==='about'?'#/about':undefined} onClick={e=>{if(k!=='about'){e.preventDefault();jump(k)}}}>{l}</a>)}</div>
- <div className="nr">{user?<><a className="btn gh sm" href="#/app">Dashboard</a><a className="btn sm" href="#/app">⚡ Translate</a><a className="av" href="#/profile" title="Open profile">{user.name.replace(/^Adv\.\s*/,'')[0]}</a><button className="btn gh sm" onClick={out}>Log out</button></>:<><a className="btn gh sm" href="#/login">Log in</a><a className="btn sm" href="#/login?signup">Start Free</a></>}<button className="bg" onClick={()=>setO(!o)}>☰</button></div></div></nav>
+ <div className="nr">{user?<><a className="btn gh sm" href="#/app">Dashboard</a><a className="btn sm" href="#/app">⚡ Translate</a><a className="av" href="#/profile" title="Open profile" aria-label="Open profile"><ProfileIcon/></a><button className="btn gh sm" onClick={out}>Log out</button></>:<><a className="btn gh sm" href="#/login">Log in</a><a className="btn sm" href="#/login?signup">Start Free</a></>}<button className="bg" onClick={()=>setO(!o)}>☰</button></div></div></nav>
 }
+
+function ProfileIcon(){return <svg className="profile-icon" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="21" r="10"/><path d="M13 54c1.7-11.2 8.3-17 19-17s17.3 5.8 19 17"/></svg>}
+function SocialIcon({type}){const paths={linkedin:<><rect x="12" y="12" width="40" height="40" rx="8"/><path d="M21 27v14M21 21v.1M30 41V27m0 7c0-5 3-7 6-7s7 2 7 8v6"/></>,twitter:<path d="M49 17 38 28l-6-6-17 24h12l-5 5 17-16 6 6 4-24Z"/>,instagram:<><rect x="12" y="12" width="40" height="40" rx="11"/><circle cx="32" cy="32" r="9"/><circle cx="43" cy="21" r="2"/></>};return <svg className="social-icon" viewBox="0 0 64 64" aria-hidden="true">{paths[type]}</svg>}
 
 function AboutPage(){
  const[active,setActive]=useState(0)
@@ -109,21 +112,20 @@ function Hero(){
  const[i,setI]=useState(0),[n,setN]=useState(0),L=D.heroLines
  useEffect(()=>{const t=setInterval(()=>setN(x=>{if(x>=L[i][0].length+L[i][1].length+8){setI(v=>(v+1)%L.length);return 0}return x+1}),55);return()=>clearInterval(t)},[i])
  const[a,b]=L[i];const s1=a.slice(0,n),s2=b.slice(0,Math.max(0,n-a.length-4))
- return <div className="hero"><div className="hero-kicker"><span className="pulse-dot"/> AI media intelligence for Indian courts <span className="kicker-line"/></div><h1 className="rv in">Every Word in Court, <span className="gt">Understood in Any Language.</span></h1>
+ return <div className="hero"><img className="hero-backdrop-image" src="/hero-scales.png" alt="" aria-hidden="true"/><div className="hero-intro"><div className="hero-kicker"><span className="pulse-dot"/> AI media intelligence for Indian courts <span className="kicker-line"/></div><h1 className="rv in">Every Word in Court,<span className="gt">Understood in Any Language.</span></h1>
  <p>AI-powered translation for text, images, PDFs, audio and video. Built for Pune Court advocates, litigants and staff — Marathi, Hindi, English and more.</p>
  <div className="cta"><a className="btn" href="#/login?signup">⚡ Start Free — 5 mins on us</a><a className="btn gh" href="#/app">📤 Upload a File</a><a className="btn gh" style={{border:0,background:'none',color:'var(--mu)',boxShadow:'none'}} onClick={()=>jump('contact')}>Book a Demo →</a></div>
- <div className="term"><div className="dots"><i/><i/><i/>&nbsp;punecourt_translator — live<em>● Translating...</em></div>
- <div className="wf">{Array.from({length:44},(_,k)=><i key={k} style={{animationDelay:-(k*97%1100)+'ms',height:12+(k*37%44)}}/>)}</div>
- <div className="tr"><small>LIVE TRANSLATION</small><br/>[EN] {s1}<br/><span className="mr">[MR] {s2}</span><span className="cur"/></div></div>
- <div className="media-stage" aria-label="Animated translation workflow preview">
-  <div className="stage-glow"/>
-  <div className="stage-orbit orbit-one"/><div className="stage-orbit orbit-two"/>
-  <div className="float-chip chip-image">▧ <span>Image OCR</span></div>
-  <div className="float-chip chip-audio">◉ <span>Audio 00:42</span></div>
-  <div className="stage-panel">
-   <div className="stage-top"><span><i className="stage-live"/> processing_case_042.mp4</span><small>LIVE PREVIEW</small></div>
-   <div className="stage-content"><div className="stage-video"><div className="video-frame"><span className="play-mark">▶</span><div className="scan-beam"/></div><div className="video-controls"><span>00:18</span><div className="progress"><i/></div><span>02:46</span></div></div>
-   <div className="stage-transcript"><small>TRANSLATED TRANSCRIPT</small><div className="transcript-line">The matter is listed before the court.</div><div className="translated-line">प्रकरण न्यायालयासमोर सूचीबद्ध आहे.</div><div className="voice-bars">{Array.from({length:22},(_,k)=><i key={k} style={{height:10+(k*17%28)}}/>)}</div></div></div>
+ </div>
+ <div className="hero-constellation" aria-label="Live court translation preview">
+  <div className="constellation-glow"/>
+  <div className="hero-ring ring-large"/><div className="hero-ring ring-small"/>
+  <div className="hero-float float-doc">▤ <span>Judgment.pdf<small>12 pages · OCR ready</small></span></div>
+  <div className="hero-float float-lang">अ <span>Marathi detected<small>98.7% confidence</small></span></div>
+  <div className="hero-float float-secure">✦ <span>Private by design<small>Encrypted workspace</small></span></div>
+  <div className="hero-core">
+   <div className="core-header"><span><i className="stage-live"/> LIVE COURT RECORD</span><b>●</b></div>
+   <div className="core-body"><div className="core-file"><div className="file-fold"/><span className="file-label">CASE<br/>RECORD</span><div className="file-lines"><i/><i/><i/><i/></div><small>CASE-042 / 2026</small></div><div className="core-arrow">→</div><div className="core-output"><div className="output-orb">文</div><span>UNDERSTOOD</span><b>English · Marathi</b></div></div>
+   <div className="core-footer"><span>Extracting meaning from every format</span><div className="core-wave">{Array.from({length:26},(_,k)=><i key={k} style={{height:8+(k*19%25)}}/>)}</div></div>
   </div>
  </div>
  <div className="stats">{D.stats.map(([a,b])=><div key={b}><b>{a}</b><span>{b}</span></div>)}</div></div>
@@ -135,24 +137,24 @@ function Landing({user}){
  useReveal('l')
  const pick=p=>{if(!user)return location.hash='#/login?signup';location.hash='#/app';localStorage.setItem('pctplan',p)}
  return <><div className="wrap"><Hero/>
- <section className="showcase"><span className="tag">✦ One workspace, every format</span><h2>From spoken words to <span className="gt">court-ready insight.</span></h2><p className="sub">A calm, intelligent workflow for every file your team handles.</p>
- <div className="showcase-shell"><div className="showcase-nav">{[['media','◉','Media translation'],['documents','▤','Document intelligence'],['languages','文','Indian languages']].map(([key,icon,label])=><button key={key} className={showcase===key?'active':''} onClick={()=>setShowcase(key)}><b>{icon}</b>{label}</button>)}</div>
+ <section className="showcase"><span className="tag">✦ One workspace, every format</span><h2>From spoken words to <span className="gt">court-ready insight.</span></h2><p className="sub"></p>
+ <div className="showcase-shell"><div className="showcase-nav">{[['media','◉','Media translation'],['documents','▤','Document intelligence'],['languages','文','Any language']].map(([key,icon,label])=><button key={key} className={showcase===key?'active':''} onClick={()=>setShowcase(key)}><b>{icon}</b>{label}</button>)}</div>
   <div className="showcase-body">{showcase==='media'&&<><div className="showcase-copy"><span className="eyebrow">MEDIA TRANSLATION</span><h3>Hear it. See it. Understand it.</h3><p>Turn hearings, recordings and video evidence into searchable translated transcripts with timestamps and speaker-aware context.</p><div className="metric-row"><span><b>99.2%</b><small>clear audio accuracy</small></span><span><b>50+</b><small>language pairs</small></span></div></div><div className="showcase-art media-art"><div className="art-screen"><div className="art-wave">{Array.from({length:30},(_,k)=><i key={k} style={{height:12+(k*23%44)}}/>)}</div><div className="art-caption">[00:42] Counsel may proceed.</div><div className="art-caption translated">[00:42] वकील पुढे जाऊ शकतात.</div></div><div className="art-bubble">● Speaking<br/><small>Speaker 02 · Marathi</small></div></div></>}
   {showcase==='documents'&&<><div className="showcase-copy"><span className="eyebrow">DOCUMENT INTELLIGENCE</span><h3>Every page, ready to act on.</h3><p>Extract, translate and organize judgments, affidavits, FIRs and notices without losing the structure of the original record.</p><div className="metric-row"><span><b>20+</b><small>file formats</small></span><span><b>OCR</b><small>for scanned pages</small></span></div></div><div className="showcase-art document-art"><div className="doc-sheet"><i/><i/><i/><i/><i/></div><div className="doc-scan"/></div></>}
-  {showcase==='languages'&&<><div className="showcase-copy"><span className="eyebrow">LANGUAGE COVERAGE</span><h3>Built for the way India speaks.</h3><p>Translate legal language across English, Marathi, Hindi and regional languages while keeping names, dates and case terms easy to review.</p><div className="metric-row"><span><b>10+</b><small>Indian languages</small></span><span><b>24/7</b><small>secure access</small></span></div></div><div className="showcase-art language-art">{Object.entries(LG).slice(0,8).map(([key,label],k)=><span key={key} style={{'--i':k}}>{label}</span>)}</div></>}
+  {showcase==='languages'&&<><div className="showcase-copy"><span className="eyebrow">LANGUAGE COVERAGE</span><h3>Built for every language.</h3><p>Translate legal language across English, Marathi, Hindi and regional languages while keeping names, dates and case terms easy to review.</p><div className="metric-row"><span><b>10+</b><small>languages supported</small></span><span><b>24/7</b><small>secure access</small></span></div></div><div className="showcase-art language-art">{Object.entries(LG).slice(0,8).map(([key,label],k)=><span key={key} style={{'--i':k}}>{label}</span>)}</div></>}
   </div></div></section>
- <section id="features"><span className="tag">⚡ Features</span><h2>Everything you need to <span className="gt">understand court records</span></h2><p className="sub">From raw files to translated, structured text — in minutes, not days.</p>
+ <section id="features"><span className="tag">⚡ Features</span><h2>Everything you need to <span className="gt">understand court records</span></h2><p className="sub"></p>
  <div className="grid">{D.features.map(([i,t,d])=><div className="card rv" key={t}><div className="ic">{i}</div><h3>{t}</h3><p>{d}</p></div>)}</div></section>
  <section><span className="tag" style={{color:'#b48cff',borderColor:'#4a2f8a'}}>→ How It Works</span><h2>Three steps to translate anything</h2><p className="sub"/>
  <div className="steps">{D.steps.map(([i,t,d],k)=><div className="step rv" key={t}><div className="ic">{i}<b>{k+1}</b></div><h3>{t}</h3><p>{d}</p></div>)}</div><div className="cta"><a className="btn" href="#/login?signup">Try It Now — Free →</a></div></section>
- <section id="pricing"><span className="tag" style={{color:'#4ade80',borderColor:'#1d5a36'}}>⚡ Pricing</span><h2>Simple, honest pricing</h2><p className="sub">Start free. Scale as you grow.</p>
+ <section id="pricing"><span className="tag" style={{color:'#4ade80',borderColor:'#1d5a36'}}>⚡ Pricing</span><h2>Simple, honest pricing</h2><p className="sub"></p>
  <div className="plans">{D.plans.map(p=><div className={'plan rv'+(p.pop?' pop':'')} key={p.n}>{p.pop&&<span className="pp">Most Popular</span>}<h3>{p.n}</h3><div className="d">{p.d}</div><div className="p">{p.p} <small>{p.u}</small></div><ul>{p.f.map(f=><li key={f}>{f}</li>)}</ul><button className={'btn'+(p.pop?'':' gh')} onClick={()=>pick(p.n)}>{p.n==='Free'?'Start Free':'Start '+p.n}</button></div>)}</div></section>
- <section id="about"><span className="tag">✦ About PuneCourtTranslator</span><h2>Language should open the record, <span className="gt">not close it.</span></h2><p className="sub" style={{maxWidth:680,margin:'14px auto 0'}}>A focused language layer for Pune Court workflows — helping advocates, litigants, clerks and interpreters understand records in the language they think in.</p><div className="cta"><a className="btn gh" href="#/about">Read our story →</a></div></section>
+ <section id="about"><span className="tag">✦ About PuneCourtTranslator</span><h2>Language should open the record, <span className="gt">not close it.</span></h2><p className="sub" style={{maxWidth:680,margin:'14px auto 0'}}></p><div className="cta"><a className="btn gh" href="#/about">Read our story →</a></div></section>
  <section><h2>Frequently Asked Questions</h2><p className="sub"/><div className="faq">{D.faqs.map(([a,b],k)=><div className={'fq rv'+(q===k?' o':'')} key={a}><button onClick={()=>setQ(q===k?-1:k)}>{a}<span>⌄</span></button><p>{b}</p></div>)}</div></section>
  <section id="contact"><div className="fin rv"><h2>Your first 5 minutes are free.</h2><p>No credit card. No setup. Upload now and see it work in under 3 minutes.</p><div className="cta"><a className="btn" href="#/login?signup">⚡ Upload Your First File</a><a className="btn gh" onClick={()=>jump('pricing')}>View All Plans</a></div></div></section></div>
- <footer><div className="wrap"><div className="fg"><div><div className="logo"><i>⚖</i><div><b>PuneCourtTranslator</b><small>LEGAL LANGUAGE AI</small></div></div><p>Language infrastructure for Pune Court. Translate, transcribe and understand records at scale.</p></div>
- {[['PRODUCT',[['Features','features'],['Pricing','pricing']]],['COMPANY',[['About','about'],['Contact','contact']]],['LEGAL',[['Privacy Policy'],['Terms of Service'],['DPDP Act']]]].map(([h,ls])=><div key={h}><h5>{h}</h5>{ls.map(([l,id])=><a key={l} href={id==='about'?'#/about':undefined} onClick={e=>{if(id==='about')return;if(id){e.preventDefault();jump(id)}}}>{l}</a>)}</div>)}</div>
- <div className="cp"><span>© 2026 PuneCourtTranslator. All rights reserved.</span><span>Demo build — not an official court service</span></div></div></footer></>
+ <footer><div className="wrap"><div className="fg"><div className="footer-brand"><div className="logo"><i>⚖</i><div><b>PuneCourtTranslator</b><small>LEGAL LANGUAGE AI</small></div></div><p>Language infrastructure for Pune Court. Translate, transcribe and understand records at scale.</p><div className="social-links" aria-label="Social links"><a href="https://www.linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn"><SocialIcon type="linkedin"/></a><a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="X / Twitter"><SocialIcon type="twitter"/></a><a href="https://www.instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram"><SocialIcon type="instagram"/></a></div></div>
+ {[['PRODUCT',[['Features','features'],['Pricing','pricing']]],['COMPANY',[['About','about'],['Contact','contact']]],['VISIT US',[['Swargate, Pune','location']]]].map(([h,ls])=><div key={h}><h5>{h}</h5>{ls.map(([l,id])=><a key={l} href={id==='about'?'#/about':id==='location'?'https://maps.google.com/?q=Swargate,Pune':undefined} target={id==='location'?'_blank':undefined} rel={id==='location'?'noreferrer':undefined} onClick={e=>{if(id==='about')return;if(id&&id!=='location'){e.preventDefault();jump(id)}}}>{id==='location'&&<span className="footer-pin">⌖</span>}{l}</a>)}</div>)}</div>
+ <div className="cp"><span>© 2026 PuneCourtTranslator. All rights reserved.</span><span>Swargate, Pune · Demo build — not an official court service</span></div></div></footer></>
 }
 
 function Login({users,setUsers,ok}){
@@ -171,31 +173,46 @@ function Login({users,setUsers,ok}){
 function ProfilePanel({user,upd,onTranslate}){
  const minutes=user.plan==='Business'?'Unlimited':`${user.used.toFixed(1)} min`
  const limit=D.limits[user.plan],usage=limit==null?100:Math.min(100,(user.used/limit)*100)
- const initials=user.name.split(/\s+/).filter(Boolean).map(x=>x[0]).slice(0,2).join('').toUpperCase()
  const features=[
   ['🎙','Translate Speech','Turn hearings, depositions and voice notes into accurate translated text with timestamps.','speech','MP3, WAV, M4A'],
+  ['◉','Translate Audio','Convert courtroom recordings into searchable, translated notes with speaker context.','audio','MP3, WAV, AAC'],
   ['📄','Translate Document','Translate judgments, affidavits, FIRs and notices while keeping your records organized.','document','PDF, DOCX, TXT'],
   ['🎬','Translate Video','Create translated captions for recorded proceedings and review every time-coded line.','video','MP4, MOV, WEBM']
  ]
- return <div className="profile-screen">
-  <div className="profile-head">
-  <div className="profile-identity"><div className="profile-avatar">{initials}</div><div><span className="eyebrow">USER PROFILE</span><h2>{user.name}</h2><p>{user.email}</p><div className="profile-status"><i/> Account active · Member since 2026</div></div></div>
-  <div className="profile-plan"><span>Current plan</span><b>{user.plan}</b><small>{user.plan==='Free'?'Upgrade for more capacity':'Plan active'}</small></div>
+ return <div className="profile-layout"><ProfileRail active="overview"/><main className="profile-screen">
+  <div className="profile-welcome"><div><span className="eyebrow">STUDENT TRANSLATION HUB</span><h1>Good morning, <span className="gt">{user.name.replace(/^Adv\.\s*/,'')}</span></h1></div><a className="btn" href="#/app">+ New translation</a></div>
+  <div id="profile-overview" className="profile-head">
+  <div className="profile-identity"><div className="profile-avatar"><ProfileIcon/></div><div><span className="eyebrow">USER PROFILE</span><h2>{user.name}</h2><p>{user.email}</p><div className="profile-status"><i/> Account active · Member since 2026</div></div></div>
+  <div className="profile-plan"><span>Current plan</span><b>{user.plan}</b><small>{user.plan==='Free'?'':'Plan active'}</small>{user.plan==='Free'&&<a className="profile-plan-action" href="#/profile/upgrade">Upgrade your plan →</a>}</div>
   </div>
   <div className="profile-stats">
    <div><b>{user.history.length}</b><span>Saved translations</span></div>
    <div><b>{minutes}</b><span>Minutes used</span></div>
    <div><b>{user.plan==='Free'?'5':'50+'}</b><span>Languages available</span></div>
   </div>
- <div className="profile-columns">
-  <div className="profile-usage card"><div className="profile-card-head"><div><span className="eyebrow">PLAN USAGE</span><h3>Translation allowance</h3></div><span className="profile-card-icon">◒</span></div><div className="usage-line"><b>{minutes}</b><span>{limit==null?'Unlimited access':`of ${limit} minutes`}</span></div><div className="meter"><i style={{width:`${usage}%`}}/></div><p>{limit==null?'Your Business plan has unlimited translation minutes.':`${Math.max(0,limit-user.used).toFixed(1)} minutes remaining this period.`}</p><a className="btn sm" href="#/app">Manage plan →</a></div>
+ <div id="profile-plan" className="profile-columns">
+  <div className="profile-usage card"><div className="profile-card-head"><div><span className="eyebrow">PLAN USAGE</span><h3>Translation allowance</h3></div><span className="profile-card-icon">◒</span></div><div className="usage-line"><b>{minutes}</b><span>{limit==null?'Unlimited access':`of ${limit} minutes`}</span></div><div className="meter"><i style={{width:`${usage}%`}}/></div><p>{limit==null?'Your Business plan has unlimited translation minutes.':`${Math.max(0,limit-user.used).toFixed(1)} minutes remaining this period.`}</p><a className="btn sm" href="#/profile/upgrade">Manage plan →</a></div>
   <div className="profile-security-card card"><div className="profile-card-head"><div><span className="eyebrow">SECURITY</span><h3>Your account is protected</h3></div><span className="profile-card-icon">⌾</span></div><div className="security-row"><span>🔒</span><div><b>Private workspace</b><small>Your files are visible only to you.</small></div><strong>Active</strong></div><div className="security-row"><span>✓</span><div><b>Secure processing</b><small>Encrypted in transit and at rest.</small></div><strong>On</strong></div></div>
  </div>
- <div className="profile-section-title"><div><span className="eyebrow">TRANSLATION TOOLS</span><h3>What would you like to translate?</h3></div><span className="profile-section-note">Choose a format to get started</span></div>
+ <div id="profile-shortcuts" className="profile-section-title"><div><span className="eyebrow">QUICK START</span><h3>What are you working on today?</h3></div><span className="profile-section-note">Launch a tool in one click</span></div>
  <div className="profile-features">{features.map(([icon,title,desc,type,formats])=><button className="profile-feature" key={type} onClick={()=>onTranslate(type)}><div className={'profile-feature-icon '+type}>{icon}</div><div className="profile-feature-copy"><h4>{title}</h4><p>{desc}</p><small>{formats}</small></div><span className="profile-arrow">→</span></button>)}</div>
- <div className="profile-history card"><div className="profile-card-head"><div><span className="eyebrow">RECENT ACTIVITY</span><h3>Your translation history</h3></div><a className="profile-text-link" href="#/app">Open workspace →</a></div>{user.history.length?<div className="profile-history-list">{user.history.slice(0,5).map(h=><div className="profile-history-item" key={h.id}><span className="profile-history-kind">✦</span><div><b>{h.name}</b><small>{LG[h.from]} → {LG[h.to]} · {new Date(h.at).toLocaleDateString()}</small></div><button className="btn gh sm" onClick={()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([h.out],{type:'text/plain'}));a.download='translation.txt';a.click()}}>Download</button></div>)}</div>:<div className="profile-empty"><span>◌</span><p>No translations yet. Your completed work will appear here.</p><a className="profile-text-link" href="#/app">Start your first translation →</a></div>}</div>
- <div className="profile-details card"><div><span className="eyebrow">ACCOUNT DETAILS</span><h3>Personal information</h3></div><div className="profile-fields"><label className="fld">Name<input value={user.name} onChange={e=>upd({name:e.target.value})}/></label><label className="fld">Email<input value={user.email} disabled/></label></div><p className="profile-security">🔒 Your account and translations are stored securely.</p></div>
- </div>
+ <div className="profile-history card"><div className="profile-card-head"><div><span className="eyebrow">RECENT ACTIVITY</span><h3>Your translation history</h3></div><a className="profile-text-link" href="#/profile/history">View all →</a></div>{user.history.length?<div className="profile-history-list">{user.history.slice(0,5).map(h=><div className="profile-history-item" key={h.id}><span className="profile-history-kind">✦</span><div><b>{h.name}</b><small>{LG[h.from]} → {LG[h.to]} · {new Date(h.at).toLocaleDateString()}</small></div><button className="btn gh sm" onClick={()=>dl('translation.txt',h.out)}>Download</button></div>)}</div>:<div className="profile-empty"><span>◌</span><p>No translations yet. Your completed work will appear here.</p><a className="profile-text-link" href="#/app">Start your first translation →</a></div>}</div>
+ <div className="profile-upgrade"><div><span className="eyebrow">UNLOCK YOUR POTENTIAL</span><h3>Translate more. Learn faster.</h3><p>Move beyond the starter plan with higher limits, every export format, and priority processing for your projects.</p></div><div className="upgrade-perks"><span>✓ 600 minutes</span><span>✓ 50+ languages</span><span>✓ AI summaries</span></div><a className="btn" href="#/profile/upgrade">Upgrade plan →</a></div>
+ <div id="profile-account" className="profile-details card"><div><span className="eyebrow">ACCOUNT DETAILS</span><h3>Personal information</h3></div><div className="profile-fields"><label className="fld">Name<input value={user.name} onChange={e=>upd({name:e.target.value})}/></label><label className="fld">Email<input value={user.email} disabled/></label></div><p className="profile-security">🔒 Your account and translations are stored securely.</p></div>
+ </main></div>
+}
+
+function ProfileRail({active}){
+ return <aside className="profile-rail"><a className="rail-brand" href="#/profile"><span>⚖</span><b>Workspace</b></a><nav className="rail-nav"><a className={active==='overview'?'active':''} href="#/profile">⌂ <span>Overview</span></a><a className={active==='history'?'active':''} href="#/profile/history">◷ <span>History</span></a><a className={active==='upgrade'?'active':''} href="#/profile/upgrade">✦ <span>Upgrade plan</span></a><a className={active==='account'?'active':''} href="#/profile/account">⚙ <span>Account</span></a></nav><div className="rail-bottom"><div className="rail-help">?</div><small>Need help?</small><a href="#/contact">Contact support</a></div></aside>
+}
+
+function ProfileSubPage({user,upd,view}){
+ const title=view==='history'?'Translation history':view==='upgrade'?'Upgrade your plan':'Account details'
+ return <div className="profile-layout"><ProfileRail active={view}/><main className="profile-screen"><div className="profile-welcome"><div><span className="eyebrow">STUDENT TRANSLATION HUB</span><h1>{title}</h1><p>{view==='history'?'Every translation completed by your account, saved in one place.':view==='upgrade'?'':'Manage your identity, plan and account information.'}</p></div><a className="btn" href="#/app">+ New translation</a></div>
+ {view==='history'&&<section className="profile-page-card card"><div className="profile-card-head"><div><span className="eyebrow">SAVED WORK</span><h3>{user.history.length} translation{user.history.length===1?'':'s'}</h3></div><a className="btn gh sm" href="#/app">Open workspace</a></div>{user.history.length?<div className="profile-history-list full-history">{user.history.map(h=><div className="profile-history-item" key={h.id}><span className="profile-history-kind">✦</span><div><b>{h.name}</b><small>{LG[h.from]} → {LG[h.to]} · {new Date(h.at).toLocaleString()}</small></div><button className="btn gh sm" onClick={()=>dl('translation.txt',h.out)}>Download</button><button className="btn danger sm" onClick={()=>upd({history:user.history.filter(x=>x.id!==h.id)})}>Delete</button></div>)}</div>:<div className="profile-empty"><span>◌</span><p>No translations yet. Start a translation and it will appear here.</p><a className="btn" href="#/app">Start translating →</a></div>}</section>}
+ {view==='upgrade'&&<section className="plans profile-plans-page">{D.plans.map(p=><div className={'plan card '+(p.n===user.plan?'pop':'')} key={p.n}>{p.n===user.plan&&<span className="plan-current">CURRENT PLAN</span>}<h3>{p.n}</h3><div className="p">{p.p}<small>{p.u}</small></div><p className="d">{p.d}</p><ul>{p.f.slice(0,4).map(f=><li key={f}>{f}</li>)}</ul>{p.n===user.plan?<button className="btn gh" disabled>Current plan</button>:<button className="btn" onClick={()=>upd({plan:p.n})}>Choose {p.n}</button>}</div>)}</section>}
+ {view==='account'&&<section className="profile-page-card card account-page"><div className="profile-account-hero"><div className="profile-avatar"><ProfileIcon/></div><div><span className="eyebrow">SIGNED-IN ACCOUNT</span><h2>{user.name}</h2><p>{user.email}</p></div></div><div className="profile-fields"><label className="fld">Full name<input value={user.name} onChange={e=>upd({name:e.target.value})}/></label><label className="fld">Email<input value={user.email} disabled/></label><label className="fld">Current plan<input value={user.plan} disabled/></label><label className="fld">Translations saved<input value={user.history.length} disabled/></label></div><p className="profile-security">🔒 Your account and translations are stored securely.</p></section>}
+ </main></div>
 }
 
 function Workspace({user,upd}){
@@ -241,7 +258,7 @@ export default function App(){
  let page
  if(h.startsWith('#/login'))page=<Login users={users} setUsers={setUsers} ok={ok}/>
  else if(h.startsWith('#/app'))page=user?<Workspace user={user} upd={upd}/>:<Login users={users} setUsers={setUsers} ok={ok}/>
- else if(h.startsWith('#/profile'))page=user?<div className="wrap app"><ProfilePanel user={user} upd={upd} onTranslate={()=>{location.hash='#/app'}}/></div>:<Login users={users} setUsers={setUsers} ok={ok}/>
+ else if(h.startsWith('#/profile'))page=user?<div className="wrap app">{h.startsWith('#/profile/history')?<ProfileSubPage user={user} upd={upd} view="history"/>:h.startsWith('#/profile/upgrade')?<ProfileSubPage user={user} upd={upd} view="upgrade"/>:h.startsWith('#/profile/account')?<ProfileSubPage user={user} upd={upd} view="account"/>:<ProfilePanel user={user} upd={upd} onTranslate={()=>{location.hash='#/app'}}/>}</div>:<Login users={users} setUsers={setUsers} ok={ok}/>
  else if(h.startsWith('#/about'))page=<AboutPage/>
  else page=<Landing user={user}/>
  return <><CreativeBackdrop/><Nav user={user} out={out}/>{page}</>
